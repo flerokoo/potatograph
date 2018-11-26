@@ -1,12 +1,15 @@
 const path = require('path');
 
 module.exports = {
-    entry: './src/index.js',
+    entry: './src/potatograph.js',
     mode: "development",
     output: {
         filename: 'potatograph.js',
-        path: path.resolve(__dirname, 'dist')
-    },
+        path: path.resolve(__dirname, 'dist'),
+        library: "Potatograph",
+        libraryTarget: "umd",
+        globalObject: 'this'
+    },    
     optimization: {
         minimize: false
     },
@@ -17,13 +20,13 @@ module.exports = {
         port: 3000,
         publicPath: '/dist/'
     },
-    module: {
-        rules: [{
-            test: require.resolve('./src/potatograph'),
-            use: [{
-                loader: 'expose-loader',
-                options: 'Potatograph'
-            }]
-        }]
-    }
+    // module: {
+    //     rules: [{
+    //         test: require.resolve('./src/potatograph'),
+    //         use: [{
+    //             loader: 'expose-loader',
+    //             options: 'Potatograph'
+    //         }]
+    //     }]
+    // }
 };
