@@ -8,16 +8,16 @@ var verticalAlign = require("./physics/sim-effectors/verticalAlign");
 var radialAlign = require("./physics/sim-effectors/radialAlign");
 
 module.exports = {
-    Solver: Solver,
-    NodeSet: NodeSet,
+    Solver,
+    NodeSet,
     effectors: {
         simulation: {
-            springlinks: springlinks,
-            pullToCenter: pullToCenter,
-            friction: friction,
-            repulsion: repulsion,
-            verticalAlign: verticalAlign,
-            radialAlign: radialAlign
+            springlinks,
+            pullToCenter,
+            friction,
+            repulsion,
+            verticalAlign,
+            radialAlign
         }
     }
 }

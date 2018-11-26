@@ -27,6 +27,16 @@ Node.prototype.removeLink = function (link) {
     return this;
 }
 
+Node.prototype.getLinkTo = function (other) {
+    
+    if (other instanceof Node) {
+        other = other.id;
+    }
+
+    let link = this.links.find(link => link.getOther(this).id === other);
+    return link === undefined ? null : link;
+}
+
 Node.prototype.applyImpulse = function(x, y) {
     this.velocity.x += x / this.mass;
     this.velocity.y += y / this.mass;
@@ -49,7 +59,10 @@ Node.prototype.saveState = function () {
 }
 
 Node.prototype.dispose = function () {
-    
+    if (this.nodeset) {
+        this.nodeset.removeNode(this);
+    }
 }
+
 
 module.exports = Node;

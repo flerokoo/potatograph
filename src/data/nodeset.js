@@ -19,6 +19,9 @@ NodeSet.prototype.addNode = function (id) {
 }
 
 NodeSet.prototype.addLink = function (id0, id1, length) {
+    
+    // TODO add check if link exists
+
     var node0 = this.getNodeById(id0);
     var node1 = this.getNodeById(id1);
 
@@ -41,20 +44,94 @@ NodeSet.prototype.removeLink = function (link) {
     var idx = this.links.indexOf(link);
     if (idx !== -1) {
         this.links.splice(idx, 1);
-        link.dispose();
+        link.node0.removeLink(link)
+        link.node1.removeLink(link)
+        link.node0 = link.node1 = link.nodeset = null;
     }
 }
 
-NodeSet.prototype.removeNode = function (node) {
+NodeSet.prototype.forEach = function (callback) {    
+    if (typeof callback !== 'function') {
+        throw new Error('Callback should be a function');      
+    }
+
+    for (var i = 0; i < this.nodes.length; i++) {
+        callback(this.nodes[i]);
+    }
+
+    return this;
+}
+
+NodeSet.prototype.forEachPair = function (callback) {
+    if (typeof callback !== 'function') {
+        throw new Error('Callback should be a function');        
+    }
+
+    var nodes = this.nodes;
+    var n = this.nodes.length;
+    for (var i = 0; i < n; i++) {
+        for (var j = i + 1; j < n; j++) {
+            callback(nodes[i], nodes[j]);
+        }
+    }
+
+    return this;
+}
+
+NodeSet.prototype.linkBy = function (condition) {
+
+    if (typeof condition !== 'function') {
+        throw new Error('Condition should be a function');
+    }
+
+    return this.forEachPair(function (n1, n2) {
+        if (condition(n1, n2)) {
+            this.addLink(n1, n2);
+        }
+    })
+}
+
+NodeSet.prototype.getLinkBetween = function(node0, node1) {
+    if (typeof node0 === 'number') {
+        node0 = this.getNodeById(node0);
+    }
     
+    return node0.getLinkTo(node1);
+}
+
+NodeSet.prototype.linkExists = function (node0, node1) {
+    return this.getLinkBetween(node0, node1) !== null;
+}
+
+NodeSet.prototype.removeNode = function (node) {    
+    var idx = this.nodes.indexOf(node);
+
+    if (idx !== -1) {
+        this.nodes.splice(idx, 1);
+        this.nodeMap[node.id] = undefined;
+        node.nodeset = null;
+    }
+}
+
+NodeSet.prototype.removeNodeById = function (id) {
+    var node = this.getNodeById(id);
+    if (node !== null) {
+        this.removeNode(node);
+    }
 }
 
 NodeSet.prototype.getNodeById = function (id) {
     var node = this.nodeMap[id];
     return node === undefined ? null : node;
-
 }
 
+NodeSet.prototype.clone = function () {
+    
+}
+
+NodeSet.fromDOT = function (dot) {
+    
+}
 
 module.exports = NodeSet;
 
