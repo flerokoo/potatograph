@@ -103,20 +103,20 @@ NodeSet.prototype.linkExists = function (node0, node1) {
     return this.getLinkBetween(node0, node1) !== null;
 }
 
-NodeSet.prototype.removeNode = function (node) {    
-    var idx = this.nodes.indexOf(node);
-
-    if (idx !== -1) {
-        this.nodes.splice(idx, 1);
-        this.nodeMap[node.id] = undefined;
-        node.nodeset = null;
+NodeSet.prototype.removeNode = function (node) { 
+    
+    if (typeof node === 'number') {
+        node = this.getNodeById(node);        
     }
-}
+    
+    if (node) {
+        var idx = this.nodes.indexOf(node);
 
-NodeSet.prototype.removeNodeById = function (id) {
-    var node = this.getNodeById(id);
-    if (node !== null) {
-        this.removeNode(node);
+        if (idx !== -1) {
+            this.nodes.splice(idx, 1);
+            this.nodeMap[node.id] = undefined;
+            node.nodeset = null;
+        }
     }
 }
 
